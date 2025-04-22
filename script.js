@@ -187,20 +187,7 @@ function koreksiTeks(prefix) {
         } else {
             feedback += `⚠️ <strong>Interpretasi</strong> sebaiknya memuat kata simpulan seperti <em>dengan demikian</em>, <em>kesimpulannya</em>, dll.<br>`;
         }
-
-        // b. Relevansi topik
-        const cocok = kataKunci.some(kata => kesimpulan.toLowerCase().includes(kata));
-        if (cocok) {
-            feedback += "✅ <strong>Interpretasi</strong> sesuai dengan topik.<br>";
-            poin++;
-        } else {
-            feedback += `⚠️ <strong>Interpretasi</strong> belum relevan dengan topik <em>${prefix}</em>.<br>`;
-            feedback += `💡 Tambahkan kata seperti <em>${kataKunci.slice(0, 4).join("</em>, <em>")}...</em><br>`;
-        }
-
-        if (poin === 2) {
-            feedback += "🎯 <em>Interpretasi sangat baik!</em><br>";
-        }
+      
     }
 
     // Tampilkan hasil
