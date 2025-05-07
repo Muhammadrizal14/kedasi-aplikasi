@@ -9,17 +9,17 @@ function tampilkanMenu(topik) {
         case 'gunung':
             judul = "Gunung Meletus";
             idPrefix = "gunung meletus";
-            videoSrc = "gunung-meletus.mp4"; // video lokal Gunung Meletus
+            videoSrc = "gunung-meletus.mp4";
             break;
         case 'gempa':
             judul = "Gempa Bumi";
             idPrefix = "gempa";
-            videoSrc = "gempa-bumi.mp4"; // video lokal Gempa Bumi
+            videoSrc = "gempa-bumi.mp4";
             break;
         case 'bullying':
             judul = "Bullying";
             idPrefix = "bullying";
-            videoSrc = "bullying.mp4"; // video lokal Bullying
+            videoSrc = "bullying.mp4";
             break;
     }
 
@@ -52,6 +52,7 @@ function tampilkanMenu(topik) {
         <div id="feedback_${idPrefix}" style="margin-top: 10px;"></div>
     `;
 }
+
 function simpanLatihan(prefix) {
     const judul = document.getElementById(`${prefix}_judul`).value.trim();
     const pernyataan = document.getElementById(`${prefix}_pernyataan`).value.trim();
@@ -64,7 +65,9 @@ function simpanLatihan(prefix) {
     }
 
     const isiDoc = `
-        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+              xmlns:w='urn:schemas-microsoft-com:office:word' 
+              xmlns='http://www.w3.org/TR/REC-html40'>
         <head><meta charset='utf-8'><title>Dokumen KEDASI</title></head>
         <body>
             <h2 style="text-align: center;">${judul}</h2>
@@ -88,8 +91,6 @@ function simpanLatihan(prefix) {
     link.click();
     document.body.removeChild(link);
 }
-
-
 function koreksiTeks(prefix) {
     const judul = document.getElementById(`${prefix}_judul`).value.trim();
     const pernyataan = document.getElementById(`${prefix}_pernyataan`).value.trim();
@@ -97,6 +98,7 @@ function koreksiTeks(prefix) {
     const kesimpulan = document.getElementById(`${prefix}_kesimpulan`).value.trim();
 
     let feedback = "";
+    let adaKesalahan = false; // Tambahkan flag untuk memeriksa kesalahan
 
     const kataKunciTopik = {
         "gunung meletus": ["magma", "letusan", "lava", "abu", "vulkanik", "gunung api"],
@@ -109,8 +111,10 @@ function koreksiTeks(prefix) {
     // ======== 1. JUDUL ========
     if (judul === "") {
         feedback += "❌ <strong>Judul</strong> belum diisi.<br>";
+        adaKesalahan = true;
     } else if (!judul.toLowerCase().includes(prefix)) {
         feedback += `⚠️ <strong>Judul</strong> belum menyebutkan topik dengan jelas. Pastikan judul mengandung kata "<em>${prefix}</em>".<br>`;
+        adaKesalahan = true;
     } else {
         feedback += "✅ <strong>Judul</strong> sudah sesuai dengan topik.<br>";
     }
@@ -118,6 +122,7 @@ function koreksiTeks(prefix) {
     // ======== 2. PERNYATAAN UMUM ========
     if (pernyataan === "") {
         feedback += "❌ <strong>Pernyataan Umum</strong> belum diisi.<br>";
+        adaKesalahan = true;
     } else {
         let poin = 0;
 
@@ -127,6 +132,7 @@ function koreksiTeks(prefix) {
             poin++;
         } else {
             feedback += `⚠️ <strong>Pernyataan Umum</strong> sebaiknya mengandung kata seperti <em>adalah</em>, <em>merupakan</em>, dll.<br>`;
+            adaKesalahan = true;
         }
 
         // b. Relevansi topik
@@ -137,6 +143,7 @@ function koreksiTeks(prefix) {
         } else {
             feedback += `⚠️ <strong>Pernyataan Umum</strong> belum menunjukkan topik <em>${prefix}</em> dengan jelas.<br>`;
             feedback += `💡 Sertakan kata seperti <em>${kataKunci.slice(0, 4).join("</em>, <em>")}...</em><br>`;
+            adaKesalahan = true;
         }
 
         if (poin === 2) {
@@ -147,6 +154,7 @@ function koreksiTeks(prefix) {
     // ======== 3. DERETAN PENJELAS ========
     if (penjelas === "") {
         feedback += "❌ <strong>Deretan Penjelas</strong> belum diisi.<br>";
+        adaKesalahan = true;
     } else {
         let poin = 0;
 
@@ -157,6 +165,7 @@ function koreksiTeks(prefix) {
         } else {
             feedback += `⚠️ <strong>Deretan Penjelas</strong> belum menjelaskan proses atau sebab-akibat dengan jelas.<br>`;
             feedback += `💡 Gunakan kata seperti <em>karena</em>, <em>sehingga</em>, dll.<br>`;
+            adaKesalahan = true;
         }
 
         // b. Relevansi topik
@@ -167,16 +176,18 @@ function koreksiTeks(prefix) {
         } else {
             feedback += `⚠️ <strong>Deretan Penjelas</strong> belum menunjukkan topik <em>${prefix}</em> secara relevan.<br>`;
             feedback += `💡 Sertakan kata kunci seperti <em>${kataKunci.slice(0, 4).join("</em>, <em>")}...</em><br>`;
+            adaKesalahan = true;
         }
 
         if (poin === 2) {
-            feedback += "🎯 <em>Deretan Penjelas sangat baik!</em><br>";
+            feedback += "🎯 <em>Dereretan Penjelas sangat baik!</em><br>";
         }
     }
 
     // ======== 4. INTERPRETASI / KESIMPULAN ========
     if (kesimpulan === "") {
         feedback += "❌ <strong>Interpretasi</strong> belum diisi.<br>";
+        adaKesalahan = true;
     } else {
         let poin = 0;
 
@@ -186,11 +197,35 @@ function koreksiTeks(prefix) {
             poin++;
         } else {
             feedback += `⚠️ <strong>Interpretasi</strong> sebaiknya memuat kata simpulan seperti <em>dengan demikian</em>, <em>kesimpulannya</em>, dll.<br>`;
+            adaKesalahan = true;
         }
-      
+        if (poin === 2) {
+            feedback += "🎯 <em>Interpretasi sangat baik!</em><br>";
+        }
     }
 
-    // Tampilkan hasil
+    // Tampilkan hasil feedback
     document.getElementById(`feedback_${prefix}`).innerHTML = `<div class="feedback-box">${feedback}</div>`;
+
+    // Tampilkan notifikasi berdasarkan kesalahan
+    if (adaKesalahan) {
+        tampilkanNotifikasi("Masih ada bagian yang belum benar. Periksa kembali teksmu.");
+    } else {
+        tampilkanNotifikasi("✅ Semua bagian sudah benar. Silakan simpan teksmu.", true);
+    }
 }
 
+
+function tampilkanNotifikasi(pesan, sukses = false) {
+    const notifikasi = document.getElementById("notifikasi");
+    notifikasi.innerText = pesan;
+    notifikasi.style.backgroundColor = sukses ? "#2ecc71" : "#f44336"; // hijau / merah
+    notifikasi.style.display = "block";
+
+    const audio = sukses ? document.getElementById("audio-success") : document.getElementById("audio-error");
+    if (audio) audio.play();
+
+    setTimeout(() => {
+        notifikasi.style.display = "none";
+    }, 3000);
+}

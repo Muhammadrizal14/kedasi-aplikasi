@@ -122,3 +122,17 @@ input[type="text"] {
     color: #e67e22;
     font-weight: bold;
 }
+#notifikasi {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #f44336; /* merah untuk error */
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    display: none;
+}
+
+
